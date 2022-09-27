@@ -102,3 +102,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 });
+
+
+// ref: https://medium.com/@hansanapushpakumara/simple-bmi-calculator-using-react-native-with-expo-ac20ee7467cc
