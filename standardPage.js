@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Switch} from 'react-native'
 
 class Inputs extends Component {
-  
+
     Ustatus = {
         weight:'',
         height:'',
@@ -22,8 +22,6 @@ class Inputs extends Component {
         rslt = rslt.toFixed(2);
         this.setState({bmi: rslt})
     }
-
-
   
     render() {
       return (
@@ -63,7 +61,7 @@ class Inputs extends Component {
             <Text 
             name='titleResult' 
             style={[styles.title]}>
-              Result:
+              Result
             </Text>
 
             <Text 
@@ -81,7 +79,7 @@ class Inputs extends Component {
         )
     }
 }
-  export default Inputs
+  export default standardPage;
 
 const styles = StyleSheet.create({
   container: {
