@@ -1,87 +1,116 @@
-import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Switch} from 'react-native'
+/**
+ * Author: Cadence, SAO I KUAN
+ * Student# 301204757
+ * Date: 27 Sept 2022
+ */
 
-class Inputs extends Component {
+import React, { Component } from 'react'
+import { View, Text, TextInput, StyleSheet, Button, Switch, TouchableHighlight} from 'react-native'
+
+class Inputs extends Component { //create class
   
-    Ustatus = {
-        weight:'',
-        height:'',
-        bmi:'',
-    }
+  constructor() {
+    super();
+    this.state = {
+      weight: 0,
+      height: 0,
+      bmi: ' ',
+      currentMode: 'metric', 
+    };
+  }
 
     handleWgt = (text) =>{
-        this.setState({weight: text})
+        this.setState({weight: +text})
     }
 
     handleHgt = (text) => {
-        this.setState({height: text})
+        this.setState({height: +text})
     }
 
-    calBMI = (weight, height) => {
-        var rslt = (parseFloat(weight))/((parseFloat(height)*100)^2);
-        rslt = rslt.toFixed(2);
-        this.setState({bmi: rslt})
+  calBMI = (weight, height, currentMode) => { // BMI func create, 3 variables
+    const rslt = currentMode === 'metric' ? weight / (height / 100) ** 2 // if metric mode 
+         : weight / (height * height) * 703; // if imperial mode
+         const convertedBmi = rslt.toFixed(1); // round result .1 digit
+      const resultInfo = rslt < 18.5 ? "Underweight" : (rslt => 18.5 && rslt <= 24.9) ? "Normal" : (rslt > 25 && rslt <= 29.9) ? "Overweight" : "Obese" //show body notice
+      console.log("rslt", rslt) 
+      console.log("convertedBmi", convertedBmi)
+        this.setState({bmi: convertedBmi, result: resultInfo}) 
     }
 
 
   
-    render() {
+    render() { //render to app
       return (
         <View style={styles.container}>
             
-            <Text 
-            name='title' 
-            style={[styles.title]}>BMI Calculator
+            <Text //title setup
+              name='title' 
+              style={[styles.title]}>BMI Calculator 
             </Text>
 
-            <Text 
-            name='titleWeight' 
-            style={[styles.title]}>
-              Weight: 
+          
+          <View style={styles.switchContainer}> 
+            <TouchableHighlight //metric mode calling
+              style={this.state.currentMode === 'metric' ? styles.itemActive : styles.item} //shift color
+              onPress={() => this.setState({ currentMode: 'metric' })} // choose mode
+            >
+              <Text style={this.state.currentMode === 'metric' ? styles.activeText : styles.inactiveText}>Metric</Text> 
+            </TouchableHighlight>   
+
+            <TouchableHighlight // call imperial mode
+              style={this.state.currentMode === 'imperial' ? styles.itemActive : styles.item}
+              onPress={() => this.setState({ currentMode: 'imperial' })}
+            >
+              <Text style={this.state.currentMode === 'imperial' ? styles.activeText : styles.inactiveText}>Imperial</Text>
+            </TouchableHighlight>
+
+          </View>
+            <Text  //weight title
+              name='titleWeight' 
+              style={[styles.title]}> {/*change weight text once button clicked*/}
+              {this.state.currentMode === 'metric' ? 'Weight (kg)' : 'Weight (lbs)'}
             </Text>
 
-            <TextInput 
-            name='Weight' 
+            <TextInput // weight input
             style={styles.textbox} 
-            placeholder = "kg" 
-            onChangeText = {this.handleWgt}>
-            </TextInput>
+            value={this.state.weight} 
+              onChangeText={(text) => this.setState({ weight: text })}
+           />
 
-            <Text 
+            <Text  // height title
             name='titleHeight' 
-            style={[styles.title]}>
-              Height:
+            style={[styles.title]}> {/*change height text once button clicked*/}
+            {this.state.currentMode === 'metric' ? 'Height (CM)' : 'Height (IN)'}
             </Text>
-
-            <TextInput 
-            name='Height' 
-            style={styles.textbox} 
-            placeholder = "cm" 
-            onChangeText = {this.handleHgt}>
-            </TextInput>
+           
+            <TextInput // height input
+              style={styles.textbox} 
+              onChangeText = {(text) => this.setState({height: +text})}
+              />
 
             <Text 
             name='titleResult' 
             style={[styles.title]}>
-              Result:
+              Result: 
+          </Text>
+            <Text> {/* bmi title */}
+              {this.state.bmi}
+            </Text>
+            <Text>    
+              {this.state.result}
             </Text>
 
-            <Text 
-            name='output'
-            style = {styles.textbox}>
-              {this.Ustatus.bmi}
-            </Text>
-
-            <Button
+          <Button //button switch call calBMI func
             title='Calculate'
-            onPress={
-              () => this.calBMI(this.Ustatus.weight, this.Ustatus.height)}>
-            </Button>
+            onPress={ 
+              () => this.calBMI(this.state.weight, this.state.height, this.state.currentMode)}>
+          </Button>
         </View>
         )
     }
 }
-  export default Inputs
+export default Inputs
+
 
 const styles = StyleSheet.create({
   container: {
@@ -100,6 +129,20 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     alignItems: 'center'
+  },
+  itemActive:{
+    borderColor: 'black', 
+    padding: 4,
+    borderWidth: '2px',
+    alignItems: "center" ,
+    backgroundColor:'red'
+  },
+  item:{
+    borderColor: 'black', 
+    padding: 4,
+    borderWidth: '2px',
+    alignItems: "center" ,
+    backgroundColor:'grey'
   }
 });
 
